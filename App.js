@@ -138,11 +138,7 @@ export default class App extends Component {
   }
 
   handlePLUButton(e) {
-    // create a route for a enter PLU screen
-    this.setState({
-      message: "Ready to scan",
-      lastScan: null
-    });
+    // create a route for an "enter PLU" component
   }
 }
 
