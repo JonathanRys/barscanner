@@ -8,6 +8,7 @@ import React, { Component } from "react";
 import { Platform, StyleSheet, Text, Button, View } from "react-native";
 import { RNCamera } from "react-native-camera";
 
+import Settings from "./Settings/Settings.js";
 import ProductFinder from "./ProductFinder/ProductFinder.js";
 import ScannerOverlay from "./ScannerOverlay/ScannerOverlay.js";
 
@@ -38,6 +39,9 @@ export default class App extends Component {
 
   render() {
     return (
+      <View style={styles.container}>
+        <Settings />
+        {/*
       <View style={styles.container}>
         <View style={styles.cameraContainer}>
           <RNCamera
@@ -70,6 +74,7 @@ export default class App extends Component {
             onPress={this.handlePLUButton.bind(this)}
           />
         )}
+        </View> */}
       </View>
     );
   }
