@@ -7,16 +7,42 @@ import {
   Button,
   ScrollView,
   FlatList,
-  TouchableOpacity,
   View
 } from "react-native";
+import { Header, CheckBox } from "react-native-elements";
 
 export default class Settings extends Component {
   constructor() {
     super();
 
-    this.state = { diet: null, allergens: [] };
+    this.state = {
+      diet: null,
+      allergens: {
+        celery: false,
+        crustaceans: false,
+        eggs: false,
+        fish: false,
+        lupin: false,
+        milk: false,
+        molluscs: false,
+        mustard: false,
+        peanuts: false,
+        sesame: false,
+        "sulfer-dioxide": false,
+        soya: false,
+        "tree-nuts": false,
+        wheat: false
+      }
+    };
   }
+
+  convertAllergens = () => {
+    let listData = [];
+    for (let x in this.state.allergens) {
+      listData.push({ key: x });
+    }
+    return listData;
+  };
 
   saveHandler = e => {
     return true;
@@ -26,15 +52,18 @@ export default class Settings extends Component {
     return false;
   };
 
-  toggleAllergen = e => {
-    this.setState({ allergens: [] });
+  toggleAllergen = (e, key) => {
+    let toggleState = {};
+    toggleState[key] = !this.state.allergens[key];
+
+    this.setState({ allergens: { ...this.state.allergens, ...toggleState } });
   };
 
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.pageHeading}>
-          <Text style={styles.pageHeadingText}>Settings:</Text>
+          <Text style={styles.pageHeadingText}>Settings</Text>
         </View>
         <ScrollView style={styles.mainScroller}>
           <View style={styles.section}>
@@ -65,38 +94,28 @@ export default class Settings extends Component {
             <Text style={styles.sectionHeading}>Allergies</Text>
             <ScrollView>
               <FlatList
-                data={[
-                  { key: "celery" },
-                  { key: "crustaceans" },
-                  { key: "eggs" },
-                  { key: "fish" },
-                  { key: "lupin" },
-                  { key: "milk" },
-                  { key: "molluscs" },
-                  { key: "mustard" },
-                  { key: "peanuts" },
-                  { key: "sesame" },
-                  { key: "sulfer-dioxide" },
-                  { key: "soya" },
-                  { key: "tree-nuts" },
-                  { key: "wheat" }
-                ]}
-                renderItem={({ item }) => (
-                  <Text
-                    style={styles.allergenItem}
-                    onPress={this.toggleAllergen}
-                  >
-                    {item.key}
-                  </Text>
-                )}
+                data={this.convertAllergens()}
+                renderItem={({ item }) => {
+                  return (
+                    <View key={item.key}>
+                      <CheckBox
+                        onPress={e => {
+                          this.toggleAllergen(e, item.key);
+                        }}
+                        title={item.key}
+                        checked={this.state.allergens[item.key]}
+                      />
+                    </View>
+                  );
+                }}
               />
             </ScrollView>
           </View>
+          <View style={styles.controls}>
+            <Button title="Cancel" onPress={this.cancelHandler} />
+            <Button title="Save" onPress={this.saveHandler} />
+          </View>
         </ScrollView>
-        <View style={styles.controls}>
-          <Button title="Cancel" onPress={this.cancelHandler} />
-          <Button title="Save" onPress={this.saveHandler} />
-        </View>
       </View>
     );
   }
@@ -119,7 +138,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold"
   },
-  mainScroller: {},
+  mainScroller: {
+    margin: 25
+  },
   section: {
     flexDirection: "column",
     marginTop: 10,
@@ -134,12 +155,6 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     width: "100%"
-  },
-  allergenItem: {
-    padding: 5,
-    margin: 3,
-    backgroundColor: "lightgray",
-    borderRadius: 5
   },
   controls: {
     padding: 20,
